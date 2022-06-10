@@ -23,31 +23,6 @@ def create_kafka_producer(bootstrap_server):
         exit(1)
 
 
-def construct_event(event_data, user_types):
-    # use dictionary to change assign namespace value and catch any unknown namespaces (like ns 104)
-    try:
-        event_data['namespace'] = namespace_dict[event_data['namespace']]
-    except KeyError:
-        event_data['namespace'] = 'unknown'
-
-    # assign user type value to either bot or human
-    user_type = user_types[event_data['bot']]
-
-    # define the structure of the json event that will be published to kafka topic
-    event = {"id": event_data['id'],
-             "domain": event_data['meta']['domain'],
-             "namespace": event_data['namespace'],
-             "title": event_data['title'],
-             #"comment": event_data['comment'],
-             "timestamp": event_data['meta']['dt'],#event_data['timestamp'],
-             "user_name": event_data['user'],
-             "user_type": user_type,
-             #"minor": event_data['minor'],
-             "old_length": event_data['length']['old'],
-             "new_length": event_data['length']['new']}
-
-    return event
-
 
 def init_namespaces():
     # create a dictionary for the various known namespaces
