@@ -40,7 +40,7 @@ CREATE TABLE page_by_id (
    PRIMARY KEY (page_id)
 );
 
-// task 4:
+// task 5:
 
 CREATE TABLE created_pages_time (
    user_id int,
@@ -50,15 +50,3 @@ CREATE TABLE created_pages_time (
    PRIMARY KEY (user_id, time_created, page_id)
 )
 WITH CLUSTERING ORDER BY (time_created ASC);
-
-INSERT INTO created_pages_time(user_id,page_id,user_text,time_created) VALUES (0, 100,'max', '2018-04-01');
-
-SELECT user_id, user_text, COUNT(*) FROM created_pages_time
-
-WHERE 
-   time_created>0
-   AND time_created<10000000000000000
-
-GROUP BY user_id
-
-ALLOW FILTERING;
