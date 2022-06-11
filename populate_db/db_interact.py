@@ -1,5 +1,6 @@
 import json
 import pandas as pd
+import datetime
 
 class CassandraClient:
     def __init__(self, host, port, keyspace):
@@ -63,6 +64,18 @@ class CassandraClient:
             self.session.execute(prepared, (page_id, data))
         except Exception as E:
             print(E)
+# id, name, created pages
+
+    def insert_user_page_date(self, user_id, page_id, user_text, time_created):
+        """
+        # 5. Return the id, name, and the number of created pages of all the users who created at least one page in a specified time range. 
+        """
+        query = "INSERT INTO created_pages_time(user_id,page_id,user_text,time_created) VALUES (?,?,?,?);"
+        prepared = self.session.prepare(query)
+        try:
+            self.session.execute(prepared, (user_id, page_id, user_text, time_created))
+        except Exception as E:
+            print(E)
 
     def close(self):
         self.session.shutdown()
@@ -82,11 +95,9 @@ def handle_entry(client, entry):
     # 2-nd task:
 
     # there are no user_id columns for some entries:
-    if "performer" in entry.keys():
-        if "user_id" in entry["performer"].keys():
-            client.insert_user_pages(entry["performer"]["user_id"], entry["page_id"], entry_json)
-        else:
-            print(entry_json)
+    # if "performer" in entry.keys():
+    #     if "user_id" in entry["performer"].keys():
+    #         client.insert_user_pages(entry["performer"]["user_id"], entry["page_id"], entry_json)
 
     # 3-rd task:
     # client.insert_articles_per_domain(entry["meta"]["domain"])
@@ -94,8 +105,17 @@ def handle_entry(client, entry):
     # 4-th task
     # client.insert_page_by_id(entry["page_id"], entry_json)
 
+    # 5-th task
+    curr_time = datetime.datetime.now()
 
-    # print(entry_json)
+    if "performer" in entry.keys():
+        if "user_id" in entry["performer"].keys() and "user_text" in entry["performer"].keys():
+            client.insert_user_page_date(entry["performer"]["user_id"],
+                                         entry["page_id"],
+                                         entry["performer"]["user_text"],
+                                         curr_time
+                                        )
+
     # print()
 
 

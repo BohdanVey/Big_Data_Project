@@ -1,3 +1,6 @@
+import datetime
+
+
 class CassandraClient:
     def __init__(self, host, port, keyspace):
         self.host = host
@@ -59,6 +62,39 @@ class CassandraClient:
             print(row)
             print()
 
+    def get_num_pages_by_user(self, page_id):
+        """
+        task 4
+        """
+        query = "SELECT * FROM page_by_id WHERE page_id=?"
+        prepared = self.session.prepare(query)
+        rows = self.session.execute(prepared, (page_id,))
+        for row in rows:
+            print(row)
+            print()
+    
+    def get_user_timestamps(self, from_time, to_time):
+        """
+        task 4
+        """
+        query = """
+        SELECT user_id, user_text, COUNT(*) FROM created_pages_time
+
+        WHERE 
+            time_created>?
+            AND time_created<?
+
+        GROUP BY user_id
+
+        LIMIT 5
+
+        ALLOW FILTERING;
+        """
+        prepared = self.session.prepare(query)
+        rows = self.session.execute(prepared, (from_time,to_time))
+        for row in rows:
+            print(row)
+            print()
 
 
 
@@ -88,7 +124,12 @@ def main():
 
     client.get_page_id(119167345)
 
+    print("TASK 5")
+    #5
+    to_time = datetime.datetime.now()
+    from_time = to_time - datetime.timedelta(days=1)
 
+    client.get_user_timestamps(from_time, to_time)
 
     client.close()
 
