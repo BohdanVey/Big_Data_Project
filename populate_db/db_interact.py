@@ -68,7 +68,7 @@ class CassandraClient:
 
     def insert_user_page_date(self, user_id, page_id, user_text, time_created):
         """
-        # 5. Return the id, name, and the number of created pages of all the users who created at least one page in a specified time range. 
+        # 5. Return the id, name, and the number of created pages of all the users who created at least one page in a specified time range.
         """
         query = "INSERT INTO created_pages_time(user_id,page_id,user_text,time_created) VALUES (?,?,?,?);"
         prepared = self.session.prepare(query)
@@ -118,28 +118,29 @@ def handle_entry(client, entry):
 
     # print()
 
+if __name__ == '__main__':
 
-host = 'cassandra-node1'
-port = 9042
-keyspace = 'wiki_keyspace'
-client = CassandraClient(host, port, keyspace)
-client.connect()
+    host = 'cassandra-node1'
+    port = 9042
+    keyspace = 'wiki_keyspace'
+    client = CassandraClient(host, port, keyspace)
+    client.connect()
 
-with open("data.json") as f:
-    db = json.loads(f.read())
+    with open("data.json") as f:
+        db = json.loads(f.read())
 
-    entry_list = db["data"]
-    for entry in entry_list:
-        # the only fucntion that you will use:
-        handle_entry(client, entry)
-
-
-client.close()
-print("done")
+        entry_list = db["data"]
+        for entry in entry_list:
+            # the only fucntion that you will use:
+            handle_entry(client, entry)
 
 
-# Return the list of existing domains for which pages were created.
-# Return all the pages which were created by the user with a specified user_id.
-# Return the number of articles created for a specified domain.
-# Return the page with the specified page_id
-# Return the id, name, and the number of created pages of all the users who created at least one page in a specified time range. 
+    client.close()
+    print("done")
+
+
+    # Return the list of existing domains for which pages were created.
+    # Return all the pages which were created by the user with a specified user_id.
+    # Return the number of articles created for a specified domain.
+    # Return the page with the specified page_id
+    # Return the id, name, and the number of created pages of all the users who created at least one page in a specified time range.
