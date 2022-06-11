@@ -70,16 +70,23 @@ def main():
     client.connect()
 
     #1
-    # client.get_unique_domains()
+    print("TASK 1")
+    client.get_unique_domains()
     
     #2
-    client.get_user_articles(19485939)
+    print("TASK 2")
+
+    client.get_user_articles(302461)
 
     #3
-    # client.get_number_articles("en.wikisource.org")
+    print("TASK 3")
+
+    client.get_number_articles("it.wikipedia.org")
 
     #4
-    # client.get_page_id(107212606)
+    print("TASK 4")
+
+    client.get_page_id(119167345)
 
 
 
